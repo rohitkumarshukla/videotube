@@ -1,11 +1,5 @@
 import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
-
-
-import { v2 as cloudinary } from 'cloudinary';
-
-
-
     // Configuration
     cloudinary.config({ 
         cloud_name: CLOUDINARY_CLOUD_NAME,
@@ -25,7 +19,7 @@ import { v2 as cloudinary } from 'cloudinary';
                 return response;
         }catch(error){
             // remove the locally saved temporary file as the upload operation got failed
-            fs.unlike(localFilePath)
+            fs.unlikeSync(localFilePath)
             return null;
         }
     }
