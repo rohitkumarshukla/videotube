@@ -1,4 +1,4 @@
-import {upload} from "../db/middlewares/multer.middleware.js"
+import {upload} from "../middlewares/multer.middleware.js"
 import { Router } from "express"
 import { registerUser } from "../controllers/user.controller.js"
 const router = Router()

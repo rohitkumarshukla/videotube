@@ -1,3 +1,4 @@
+import "dotenv/config"
 import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
     // Configuration
@@ -19,7 +20,10 @@ import fs from "fs"
                 return response;
         }catch(error){
             // remove the locally saved temporary file as the upload operation got failed
-            fs.unlinkSync(localFilePath)
+            if (localFilePath && fs.existsSync(localFilePath)) {
+                fs.unlinkSync(localFilePath)
+            }
+            console.error("Cloudinary upload failed:", error)
             return null;
         }
     }

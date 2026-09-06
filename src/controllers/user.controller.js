@@ -47,9 +47,9 @@ const existedUser = await User.findOne({
 
 
 //  check for images,check for avatar
-
-const avatarLocalPath = req.files?.avatar[0]?.path;
-const coverImageLocalPath = req.files?.coverImage[0]?.path;
+ 
+const avatarLocalPath = req.files?.avatar?.[0]?.path;
+const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
 
 if(!avatarLocalPath){
     throw new ApiError(400,"Avatar is required")
@@ -67,11 +67,11 @@ if(!avatar){
 
 // create user Object - create entry in DB
 
-User.create({
+const user = await User.create({
     fullname,
     email,
     password,
-    username : username.tolowerCase(),
+    username : username.toLowerCase(),
     avatar : avatar.url,
     coverImage : coverImage?.url||""
 })
