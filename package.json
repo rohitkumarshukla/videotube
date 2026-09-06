@@ -10,7 +10,7 @@
   "license": "ISC",
   "author": "Rohit Shukla",
   "type": "module",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
   },
@@ -26,6 +26,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.6.0",
     "mongoose": "^9.9.3",
     "mongoose-paginate-v2": "^1.9.5",
     "multer": "^2.3.0"

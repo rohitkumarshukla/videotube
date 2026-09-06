@@ -1,4 +1,6 @@
-import {upload} from "../middlewares/multer.middleware"
+import {upload} from "../db/middlewares/multer.middleware.js"
+import { Router } from "express"
+import { registerUser } from "../controllers/user.controller.js"
 const router = Router()
 router.route("/register").post(
 upload.fields([
@@ -13,3 +15,5 @@ upload.fields([
 ]),
 registerUser
 )
+
+export default router;
