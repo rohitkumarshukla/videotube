@@ -183,6 +183,21 @@ const loginUser = asyncHandler(async(req,res)=>{
 })
 const logoutUser = asyncHandler(async(req,res)=>{
     // cookie vgera clear karni padegi
-    
+    await User.findByIdandUpdate(
+        req.user._id,
+        {
+            $unset : {
+                // this removes the field from document
+                refreshToken : 1 
+            }
+        },
+        {
+            new : true
+        }
+        const options = {
+            httpOnly :  true,
+            secure : true
+        }
+    )
 })
-export { registerUser };
+export { registerUser, loginUser, logoutUser };
