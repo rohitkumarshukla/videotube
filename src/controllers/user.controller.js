@@ -8,6 +8,9 @@ import mongoose from "mongoose";
 const generateAccessAndRefreshTokens = async(userId)=>{
     try{
         const user = await User.findById(userId)
+        if(!user){
+            throw new ApiError(404,"No user found")
+        }
         const accessToken = user.generateAccessToken()
         const refreshToken = user.generateRefreshToken()
 
@@ -175,7 +178,7 @@ const loginUser = asyncHandler(async(req,res)=>{
         new ApiResponse(
             200,
             {
-            user : LoggedInUser,accessToken,refreshToken
+            user : loggedInUser,accessToken,refreshToken
             },
             "User Logged In Successfully"
         )
@@ -244,4 +247,83 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
     throw new ApiError(401,error?.message||"Invalid refresh Token")
  }
 })
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+
+const changeCurrentPassword = asyncHandler(async(req,res)=>{
+    const {oldPassword,newPassword} = req.body
+
+
+    const user = await User.findById(req.user?._id)
+    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+
+    if(!isPasswordCorrect){
+        throw new ApiError(400,"Invalid old Password")
+    }
+    user.password = newPassword
+    await user.save({validateBeforeSave:false})
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200,{},"Password changed successfully"))
+})
+const getCurrentUser = asyncHandler(async(req,res)=>{
+     return res
+     .status(200)
+     .json(new ApiResponse(
+        200,
+        req.user,
+        "User fetched Successfully"
+     ))
+})
+const updateAccountDetails = asyncHandler(async(req,res)=>{
+    const {fullName,email} = req.body
+
+    if(!fullName||!email){
+        throw new ApiError(400,"All fields are required")
+    }
+    const user = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set : {
+                fullname,
+                email
+            }
+        },
+        {
+            new : true
+        }
+    ).select("-password")
+    return res
+    .status(200)
+    .json(new ApiResponse(200,user,"Account details updated successfully"))
+});
+const updateUserAvatar = asyncHandler(async(req,res)=>{
+    const avatarLocalPath = req.files?.path
+    if(!avatarLocalPath){
+        throw new ApiError(400,"Error while uploading the avatar iamge")
+
+    }
+    const user  = await User.findByIdAndUpdate(
+        req.user?._id,
+        {
+            $set : {
+                avatar : avatar.url
+            }
+            },
+            {
+                new : true
+            }
+    ).select("-password")
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            user,
+            "Avatar Image updated successfully"
+        )
+    )
+})
+// Delete avatar
+
+export { registerUser, loginUser, logoutUser, refreshAccessToken,changeCurrentPassword ,getCurrentUser , updateAccountDetails,updateUserAvatar};
