@@ -332,7 +332,7 @@ const deleteAvatar = asyncHandler(async(req,res)=>{
     }
 
     const user =  await User.findByIdAndUpdate(
-        req.user?._id
+        req.user?._id,
         {
             $unset : {
                 avatar : 1
