@@ -325,5 +325,27 @@ const updateUserAvatar = asyncHandler(async(req,res)=>{
     )
 })
 // Delete avatar
+const deleteAvatar = asyncHandler(async(req,res)=>{
+    const avatarLocalPath = req.files?._id
+    if(!avatarLocalPath){
+        throw new ApiError(400,"Avatar not found")
+    }
+
+    const user =  await User.findByIdAndUpdate(
+        req.user?._id
+        {
+            $unset : {
+                avatar : 1
+            }
+        },
+        {
+            new : true
+        }
+    ).select("-password")
+        
+    return res
+    .status(200)
+    .ApiResponse(200,user,"Avatar Deleted Successfully")
+})
 
 export { registerUser, loginUser, logoutUser, refreshAccessToken,changeCurrentPassword ,getCurrentUser , updateAccountDetails,updateUserAvatar};
